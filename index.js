@@ -94,6 +94,21 @@ async function run() {
       const result = await todoCollection.updateOne(query,updatedDoc);
       res.send(result)
     })
+    //? Update todo status
+    app.put('/status/:id', async(req, res) => {
+      const status = req.body.status;
+      const id = req.params.id;
+      const query = { _id : new ObjectId(id) };
+      // console.log(id, query);
+      // console.log(status);
+      const updatedDoc = {
+        $set : {
+          status : status
+        }
+      }
+      const result = await todoCollection.updateOne(query,updatedDoc);
+      res.send(result)
+    })
 
     //? Delete todo
     app.delete('/deleteTodo/:id' , async(req, res) => {
