@@ -13,7 +13,7 @@ app.get('/', (req,res) => {
     res.send(`App is running on port ${port}`)
 })
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.USER_DB}:${process.env.USER_PASS}@cluster2.edqru7i.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -71,6 +71,21 @@ async function run() {
       const query = { email : email};
       const result = await todoCollection.find(query).toArray();
       res.send(result);
+    })
+
+    //? Update todo
+    app.put('/todo/:id', async(req, res) => {
+      const updatedTodo = req.body;
+      const id = req.params.id;
+      const query = { _id : new ObjectId(id) };
+      console.log(id, query);
+      const updatedDoc = {
+        $set : {
+          ...updatedTodo
+        }
+      }
+      const result = await todoCollection.updateOne(query,updatedDoc);
+      res.send(result)
     })
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
