@@ -27,6 +27,7 @@ const client = new MongoClient(uri, {
 
 const database = client.db('task-bud');
 const usersCollection = database.collection('users')
+const todoCollection = database.collection('todo')
 
 async function run() {
   try {
@@ -54,6 +55,23 @@ async function run() {
         )
         res.send(result)
       })
+
+
+    //? Task related api
+    app.post('/addTodo', async(req, res) => {
+      const todo = req.body;
+      const result = await todoCollection.insertOne(todo);
+      res.send(result);
+      console.log(todo);
+    })
+
+    //? Get all todo
+    app.get('/todo', async(req, res) => {
+      const email = req.query.email;
+      const query = { email : email};
+      const result = await todoCollection.find(query).toArray();
+      res.send(result);
+    })
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
