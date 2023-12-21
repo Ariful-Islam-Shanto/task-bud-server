@@ -28,6 +28,7 @@ const client = new MongoClient(uri, {
 const database = client.db('task-bud');
 const usersCollection = database.collection('users')
 const todoCollection = database.collection('todo')
+const benefitsCollection = database.collection('userBenefits')
 
 async function run() {
   try {
@@ -70,6 +71,12 @@ async function run() {
       const email = req.query.email;
       const query = { email : email};
       const result = await todoCollection.find(query).toArray();
+      res.send(result);
+    })
+
+    //? Get all todo
+    app.get('/benefits', async(req, res) => {
+      const result = await benefitsCollection.find().toArray();
       res.send(result);
     })
 
